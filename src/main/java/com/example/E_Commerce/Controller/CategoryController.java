@@ -2,11 +2,8 @@ package com.example.E_Commerce.Controller;
 
 import com.example.E_Commerce.DTO.CategoryDto;
 import com.example.E_Commerce.Service.CategoryService;
-import jakarta.persistence.Id;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

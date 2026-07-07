@@ -1,8 +1,7 @@
-package com.example.E_Commerce.DTO;
+package com.example.E_Commerce.Response;
 
-import com.example.E_Commerce.DTO.type.StatusType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import com.example.E_Commerce.DTO.OrderItemResponseDto;
+import com.example.E_Commerce.DTO.Enums.StatusType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

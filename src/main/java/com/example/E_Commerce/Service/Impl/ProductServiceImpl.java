@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = modelMapper.map(productDto, Product.class);
 
-        product.setId(null);
+        product.setProductId(null);
 
         product.setCategory(category);
 
@@ -45,14 +45,15 @@ public class ProductServiceImpl implements ProductService {
         product.setRemainingQuantity(remainingQuantity);
         product.setAvailable(remainingQuantity > 0);
 
-        System.out.println("Product Id before save = " + product.getId());
+        System.out.println("Product Id before save = " + product.getProductId());
 
         Product savedProduct = productRepository.save(product);
 
         return modelMapper.map(savedProduct, ProductResponseDto.class);
     }
+
     @Override
-    public List<ProductResponseDto> getAllProducts(){
+    public List<ProductResponseDto> getAllProducts() {
 
         List<Product> productList = productRepository.findAll();
 
@@ -62,9 +63,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDto getProductById(Long id){
-        Product product = productRepository.findById(id).orElseThrow((()->new RuntimeException("No element found with the id: "+ id)));
-        return  modelMapper.map(product, ProductResponseDto.class);
+    public ProductResponseDto getProductById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow((() -> new RuntimeException("No element found with the id: " + id)));
+        return modelMapper.map(product, ProductResponseDto.class);
 
     }
 
@@ -78,13 +79,13 @@ public class ProductServiceImpl implements ProductService {
                     "Filled stock quantity cannot exceed stock quantity");
         }
 
-        Product product = productRepository.findById(id).orElseThrow((()->new RuntimeException("No element found with the id: "+ id)));
+        Product product = productRepository.findById(id).orElseThrow((() -> new RuntimeException("No element found with the id: " + id)));
 
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
         product.setStockQuantity(productDto.getStockQuantity());
-        int remainingQuantity = productDto.getStockQuantity()-productDto.getFilledStockQuantity();
+        int remainingQuantity = productDto.getStockQuantity() - productDto.getFilledStockQuantity();
         product.setRemainingQuantity(remainingQuantity);
         product.setAvailable(remainingQuantity > 0);
 

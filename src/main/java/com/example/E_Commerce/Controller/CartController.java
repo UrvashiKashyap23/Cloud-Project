@@ -28,9 +28,10 @@ public class CartController {
         return cartService.clearCart(id);
 
     }
-    @PostMapping("/addproduct/{cartId}")
-    public CartDto addProductToCart(@PathVariable Long cartId,@RequestBody  CartItemRequestDto cartItemRequestDto){
-        return cartService.addProductToCart(cartId,cartItemRequestDto);
+    @PostMapping("/addproduct/{userId}")
+    public CartDto addProductToCart(@PathVariable Long userId,@RequestBody  CartItemRequestDto cartItemRequestDto){
+
+        return cartService.addProductToCart(userId,cartItemRequestDto);
     }
     @DeleteMapping("/deleteCartItem/{cartId}/{cartItemId}")
     public CartDto deleteProductFromCart(@PathVariable Long cartId , @PathVariable Long cartItemId){

@@ -1,6 +1,6 @@
 package com.example.E_Commerce.Entity;
 
-import com.example.E_Commerce.DTO.type.StatusType;
+import com.example.E_Commerce.DTO.Enums.StatusType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,5 +49,9 @@ public class Order {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

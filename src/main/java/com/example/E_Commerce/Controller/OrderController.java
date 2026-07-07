@@ -2,8 +2,8 @@ package com.example.E_Commerce.Controller;
 
 
 import com.example.E_Commerce.DTO.OrderRequestDto;
-import com.example.E_Commerce.DTO.OrderResponseDto;
-import com.example.E_Commerce.DTO.type.StatusType;
+import com.example.E_Commerce.Response.OrderResponseDto;
+import com.example.E_Commerce.DTO.Enums.StatusType;
 import com.example.E_Commerce.Service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

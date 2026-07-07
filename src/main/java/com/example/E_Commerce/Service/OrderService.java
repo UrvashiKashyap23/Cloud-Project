@@ -1,8 +1,8 @@
 package com.example.E_Commerce.Service;
 
 import com.example.E_Commerce.DTO.OrderRequestDto;
-import com.example.E_Commerce.DTO.OrderResponseDto;
-import com.example.E_Commerce.DTO.type.StatusType;
+import com.example.E_Commerce.Response.OrderResponseDto;
+import com.example.E_Commerce.DTO.Enums.StatusType;
 
 import java.util.List;
 

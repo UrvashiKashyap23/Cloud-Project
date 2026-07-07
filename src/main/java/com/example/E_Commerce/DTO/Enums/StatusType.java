@@ -1,4 +1,4 @@
-package com.example.E_Commerce.DTO.type;
+package com.example.E_Commerce.DTO.Enums;
 
 public enum StatusType {
     PENDING,

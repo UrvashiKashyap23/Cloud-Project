@@ -21,7 +21,7 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  //by number 1,2,3...
-    private Long Id;
+    private Long categoryId;
 
     private String name;
 

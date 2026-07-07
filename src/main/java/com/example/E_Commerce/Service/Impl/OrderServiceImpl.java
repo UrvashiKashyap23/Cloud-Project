@@ -3,19 +3,17 @@ package com.example.E_Commerce.Service.Impl;
 import com.example.E_Commerce.DTO.OrderItemRequestDto;
 import com.example.E_Commerce.DTO.OrderItemResponseDto;
 import com.example.E_Commerce.DTO.OrderRequestDto;
-import com.example.E_Commerce.DTO.OrderResponseDto;
-import com.example.E_Commerce.DTO.type.StatusType;
+import com.example.E_Commerce.Response.OrderResponseDto;
+import com.example.E_Commerce.DTO.Enums.StatusType;
 import com.example.E_Commerce.Entity.Order;
 import com.example.E_Commerce.Entity.OrderItem;
 import com.example.E_Commerce.Entity.Product;
-import com.example.E_Commerce.Repository.CategoryRepository;
 import com.example.E_Commerce.Repository.OrderRepository;
 import com.example.E_Commerce.Repository.ProductRepository;
 import com.example.E_Commerce.Service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -103,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderItemResponseDto> items = order.getOrderItems().stream()
                 .map(i -> new OrderItemResponseDto(
-                        i.getProduct().getId(),
+                        i.getProduct().getProductId(),
                         i.getProduct().getName(),
                         i.getQuantity(),
                         i.getPriceAtPurchase(),

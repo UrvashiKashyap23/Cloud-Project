@@ -6,13 +6,14 @@ import com.example.E_Commerce.DTO.CartItemResponseDto;
 import com.example.E_Commerce.Entity.Cart;
 import com.example.E_Commerce.Entity.CartItem;
 import com.example.E_Commerce.Entity.Product;
+import com.example.E_Commerce.Entity.User;
 import com.example.E_Commerce.Repository.CartRepository;
-import com.example.E_Commerce.Repository.CategoryRepository;
 import com.example.E_Commerce.Repository.ProductRepository;
+import com.example.E_Commerce.Repository.UserRepository;
 import com.example.E_Commerce.Service.CartService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,9 +22,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
+
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
     private final CartRepository cartRepository;
+    private final UserRepository userRepository;
 
     @Override
     public CartDto createCart() {
@@ -45,7 +48,7 @@ public class CartServiceImpl implements CartService {
         List<CartItemResponseDto> items = cart.getItemList().stream()
                 .map(item -> new CartItemResponseDto(
                         item.getCartItemId(),
-                        item.getProduct().getId(),
+                        item.getProduct().getProductId(),
                         item.getProduct().getName(),
                         item.getProduct().getPrice(),
                         item.getQuantity(),
@@ -55,7 +58,7 @@ public class CartServiceImpl implements CartService {
 
         cartDto.setItemList(items);
 
-        return cartDto;
+        return  cartDto;
 
     }
 
@@ -74,22 +77,30 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartDto addProductToCart(Long cartId, CartItemRequestDto cartItemRequestDto) {
+    @Transactional
+    public CartDto addProductToCart(Long userId, CartItemRequestDto cartItemRequestDto) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found!")); // is user logined
 
         Product product = productRepository.findById(cartItemRequestDto.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found!!"));
-
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("Cart not Found!!"));
-
-
 
         if (!product.isAvailable()) {
             throw new RuntimeException("Product is currently unavailable!");
         }
 
+        Cart cart = cartRepository.findByUser(user).orElse(null);
+
+        if(cart == null){
+            cart = new Cart();
+            cart.setUser(user);
+            user.setCart(cart);
+            cart.setTotalAmount(0.0);
+            cart.setItemList(new ArrayList<>());
+        }
         CartItem existingCartItem = cart.getItemList().stream()
-                .filter(item -> item.getProduct().getId().equals(product.getId()))
+                .filter(item -> item.getProduct().getProductId().equals(product.getProductId()))
                 .findFirst()
                 .orElse(null);
 
@@ -125,6 +136,8 @@ public class CartServiceImpl implements CartService {
                 .sum();
 
         cart.setTotalAmount(totalAmount);
+
+        cart.setUser(user);
 
         Cart savedCart = cartRepository.save(cart);
 
@@ -185,7 +198,7 @@ public class CartServiceImpl implements CartService {
         List<CartItemResponseDto> items = savedCart.getItemList().stream()
                 .map(item -> new CartItemResponseDto(
                         item.getCartItemId(),
-                        item.getProduct().getId(),
+                        item.getProduct().getProductId(),
                         item.getProduct().getName(),
                         item.getProduct().getPrice(),
                         item.getQuantity(),
