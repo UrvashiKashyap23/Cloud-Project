@@ -1,22 +1,23 @@
 package com.example.E_Commerce.Service;
 
 
-import com.example.E_Commerce.DTO.ProductRequestDto;
-import com.example.E_Commerce.DTO.ProductResponseDto;
+import com.example.E_Commerce.Request.ProductRequest;
+import com.example.E_Commerce.Response.BaseApiResponse;
+import com.example.E_Commerce.Response.ProductResponse;
 
 import java.util.List;
 
 public interface ProductService {
 
-    ProductResponseDto createProduct(ProductRequestDto productRequestDto);
+    BaseApiResponse<ProductResponse> createProduct(ProductRequest productRequest);
 
-    List<ProductResponseDto> getAllProducts();
+    BaseApiResponse<List<ProductResponse>> getAllProducts();
 
-    ProductResponseDto getProductById(Long id);
+    BaseApiResponse<ProductResponse> getProductById(Long productId);
 
-    ProductResponseDto updateProductById(Long id, ProductRequestDto productDto);
+    BaseApiResponse<ProductResponse> updateProductById(Long productId, ProductRequest productRequest);
 
-    void deleteProductById(Long id);
+    BaseApiResponse<String> deleteProductById(Long productId);
 
-    List<ProductResponseDto> getAvailableProducts();
+    BaseApiResponse<List<ProductResponse>> getAvailableProducts();
 }

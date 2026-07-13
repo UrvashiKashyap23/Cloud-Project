@@ -1,5 +1,6 @@
 package com.example.E_Commerce.Response;
 
+import com.example.E_Commerce.DTO.Enums.CancelReason;
 import com.example.E_Commerce.DTO.OrderItemResponseDto;
 import com.example.E_Commerce.DTO.Enums.StatusType;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderResponseDto {
+public class OrderResponse {
 
     private Long Id;
 
@@ -28,6 +29,8 @@ public class OrderResponseDto {
     private LocalDateTime createdAt;
 
     private  LocalDateTime updatedAt;
+
+    private CancelReason cancelReason;
 
     private List<OrderItemResponseDto> items;
 }

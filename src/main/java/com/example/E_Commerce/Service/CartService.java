@@ -1,19 +1,19 @@
 package com.example.E_Commerce.Service;
 
-import com.example.E_Commerce.DTO.CartDto;
-import com.example.E_Commerce.DTO.CartItemRequestDto;
+import com.example.E_Commerce.Response.BaseApiResponse;
+import com.example.E_Commerce.Response.CartResponse;
+import com.example.E_Commerce.Request.CartItemRequest;
 
-public interface CartService  {
+public interface CartService {
 
-    CartDto createCart();
+    BaseApiResponse<CartResponse> getCart();
 
-    CartDto getCartById(Long id);
+    BaseApiResponse<String> clearCart();
 
-    String clearCart(Long id);
+    BaseApiResponse<CartResponse> addProductToCart(CartItemRequest cartItemRequest);
 
-    CartDto addProductToCart(Long cartId,CartItemRequestDto cartItemRequestDto);
+    BaseApiResponse<CartResponse> removeProductFromCart(Long cartItemId);
 
-    CartDto removeProductFromCart(Long cartId, Long cartItemId);
+    BaseApiResponse<CartResponse> updateCartItemQuantity(Long cartItemId, int quantity);
 
-    CartDto updateCartItemQuantity(Long cartId, Long cartItemId, int quantity);
 }

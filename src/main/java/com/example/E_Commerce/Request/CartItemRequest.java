@@ -1,11 +1,11 @@
-package com.example.E_Commerce.DTO;
+package com.example.E_Commerce.Request;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CartItemRequestDto {
+public class CartItemRequest {
 
     private Long productId;
 

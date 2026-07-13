@@ -1,9 +1,9 @@
-package com.example.E_Commerce.DTO;
+package com.example.E_Commerce.Response;
 
 import lombok.Data;
 
 @Data
-public class UserProfileDto {
+public class UserProfile {
     private Long userId;
 
     private String name;

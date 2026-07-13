@@ -1,16 +1,27 @@
 package com.example.E_Commerce.Service;
 
-import com.example.E_Commerce.DTO.*;
+import com.example.E_Commerce.Request.*;
+import com.example.E_Commerce.Response.AuthResponse;
+import com.example.E_Commerce.Response.BaseApiResponse;
+import com.example.E_Commerce.Response.UserProfile;
 
 
 public interface AuthenticationService {
 
-    AuthResponseDto signUp(SignupRequestDto signupRequestDto);
+    BaseApiResponse<AuthResponse> signUp(SignupRequest signupRequest);
 
-    AuthResponseDto login(LoginRequestDto loginRequestDto);
+    BaseApiResponse<AuthResponse> login(LoginRequest loginRequest);
 
-    UserProfileDto getUserProfile(Long userId);
+    BaseApiResponse<UserProfile> getUserProfile(Long userId);
 
-    UserProfileDto updateUserProfile(Long userId, UpdateProfileRequestDto requestDto);
+    BaseApiResponse<UserProfile> updateUserProfile(Long userId, UpdateProfileRequest request);
+
+    BaseApiResponse<String> changePassword(Long userId, ChangePasswordRequest request);
+
+    BaseApiResponse<String> updateEmail(Long userId, UpdateEmailRequest request);
+
+    BaseApiResponse<String> updatePhoneNumber(Long userId, UpdatePhoneNumberRequest request);
+
+    BaseApiResponse<String> deleteUser(Long userId);
 
 }

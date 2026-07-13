@@ -1,19 +1,19 @@
 package com.example.E_Commerce.Service;
 
-import com.example.E_Commerce.DTO.CategoryDto;
+
+
+import com.example.E_Commerce.Request.CategoryRequest;
+import com.example.E_Commerce.Response.BaseApiResponse;
+import com.example.E_Commerce.Response.CategoryResponse;
 
 import java.util.List;
 
-public interface CategoryService {  //define ,methods
+public interface CategoryService {
 
-    CategoryDto createCategory(CategoryDto categoryDto);
+    BaseApiResponse<CategoryResponse> createCategory(CategoryRequest categoryRequest);
 
-    List<CategoryDto> getAllCategories();
+    BaseApiResponse<List<CategoryResponse>> getAllCategories();
 
-    CategoryDto getCategoryById(Long id);
-
-
-
-
+    BaseApiResponse<CategoryResponse> getCategoryById(Long categoryId);
 
 }

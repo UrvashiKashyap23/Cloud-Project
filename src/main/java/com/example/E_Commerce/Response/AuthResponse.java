@@ -1,4 +1,4 @@
-package com.example.E_Commerce.DTO;
+package com.example.E_Commerce.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthResponseDto {
+public class AuthResponse {
 
     private String token;
 

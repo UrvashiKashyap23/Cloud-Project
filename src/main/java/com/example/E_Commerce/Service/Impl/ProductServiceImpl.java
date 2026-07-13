@@ -1,117 +1,255 @@
 package com.example.E_Commerce.Service.Impl;
 
-import com.example.E_Commerce.DTO.ProductRequestDto;
-import com.example.E_Commerce.DTO.ProductResponseDto;
+import com.example.E_Commerce.Request.ProductRequest;
+import com.example.E_Commerce.Response.BaseApiResponse;
+import com.example.E_Commerce.Response.ProductResponse;
 import com.example.E_Commerce.Entity.Category;
 import com.example.E_Commerce.Entity.Product;
 import com.example.E_Commerce.Repository.CategoryRepository;
 import com.example.E_Commerce.Repository.ProductRepository;
 import com.example.E_Commerce.Service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
     private final CategoryRepository categoryRepository;
-
     private final ModelMapper modelMapper;
 
     @Override
-    public ProductResponseDto createProduct(ProductRequestDto productDto) {
+    public BaseApiResponse<ProductResponse> createProduct(ProductRequest productRequest) {
 
-        if (productDto.getFilledStockQuantity() > productDto.getStockQuantity()) {
-            throw new IllegalArgumentException("Filled stock quantity cannot exceed stock quantity");
+        log.info("Creating product: {}", productRequest.getName());
+
+        try {
+
+            if (productRequest.getFilledStockQuantity() > productRequest.getStockQuantity()) {
+                throw new IllegalArgumentException("Filled stock quantity cannot exceed stock quantity.");
+            }
+
+            Category category = categoryRepository.findById(productRequest.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Category not found with id: " + productRequest.getCategoryId()));
+
+            Product product = modelMapper.map(productRequest, Product.class);
+
+            product.setProductId(null);
+            product.setCategory(category);
+
+            int remainingQuantity = productRequest.getStockQuantity()
+                    - productRequest.getFilledStockQuantity();
+
+            product.setRemainingQuantity(remainingQuantity);
+            product.setAvailable(remainingQuantity > 0);
+
+            Product savedProduct = productRepository.save(product);
+
+            ProductResponse response =
+                    modelMapper.map(savedProduct, ProductResponse.class);
+
+            return BaseApiResponse.<ProductResponse>builder()
+                    .code(201)
+                    .message("Product created successfully.")
+                    .data(response)
+                    .build();
+
+        } catch (Exception e) {
+
+            log.error("Error while creating product: {}", e.getMessage());
+
+            return BaseApiResponse.<ProductResponse>builder()
+                    .code(500)
+                    .message(e.getMessage())
+                    .data(null)
+                    .build();
         }
-
-        Category category = categoryRepository.findById(productDto.getCategoryId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Category not found with id: " + productDto.getCategoryId()));
-
-
-        Product product = modelMapper.map(productDto, Product.class);
-
-        product.setProductId(null);
-
-        product.setCategory(category);
-
-        int remainingQuantity = productDto.getStockQuantity() - productDto.getFilledStockQuantity();
-        product.setRemainingQuantity(remainingQuantity);
-        product.setAvailable(remainingQuantity > 0);
-
-        System.out.println("Product Id before save = " + product.getProductId());
-
-        Product savedProduct = productRepository.save(product);
-
-        return modelMapper.map(savedProduct, ProductResponseDto.class);
     }
 
     @Override
-    public List<ProductResponseDto> getAllProducts() {
+    public BaseApiResponse<List<ProductResponse>> getAllProducts() {
 
-        List<Product> productList = productRepository.findAll();
+        log.info("Fetching all products.");
 
-        return productList
-                .stream()
-                .map((product) -> modelMapper.map(product, ProductResponseDto.class)).toList();
-    }
+        try {
 
-    @Override
-    public ProductResponseDto getProductById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow((() -> new RuntimeException("No element found with the id: " + id)));
-        return modelMapper.map(product, ProductResponseDto.class);
+            List<ProductResponse> response = productRepository.findAll()
+                    .stream()
+                    .map(product -> modelMapper.map(product, ProductResponse.class))
+                    .toList();
 
-    }
+            return BaseApiResponse.<List<ProductResponse>>builder()
+                    .code(200)
+                    .message("Products fetched successfully.")
+                    .data(response)
+                    .build();
 
-    @Override
-    public ProductResponseDto updateProductById(Long id, ProductRequestDto productDto) {
+        } catch (Exception e) {
 
-        if (productDto.getFilledStockQuantity()
-                > productDto.getStockQuantity()) {
+            log.error("Error while fetching products: {}", e.getMessage());
 
-            throw new IllegalArgumentException(
-                    "Filled stock quantity cannot exceed stock quantity");
+            return BaseApiResponse.<List<ProductResponse>>builder()
+                    .code(500)
+                    .message(e.getMessage())
+                    .data(null)
+                    .build();
         }
-
-        Product product = productRepository.findById(id).orElseThrow((() -> new RuntimeException("No element found with the id: " + id)));
-
-        product.setName(productDto.getName());
-        product.setPrice(productDto.getPrice());
-        product.setDescription(productDto.getDescription());
-        product.setStockQuantity(productDto.getStockQuantity());
-        int remainingQuantity = productDto.getStockQuantity() - productDto.getFilledStockQuantity();
-        product.setRemainingQuantity(remainingQuantity);
-        product.setAvailable(remainingQuantity > 0);
-
-        Product updatedDto = productRepository.save(product);
-
-        return modelMapper.map(updatedDto, ProductResponseDto.class);
-
     }
 
     @Override
-    public void deleteProductById(Long id) {
+    public BaseApiResponse<ProductResponse> getProductById(Long productId) {
 
-        if (!productRepository.existsById(id)) {
-            throw new RuntimeException(
-                    "No element found with the id: " + id);
+        log.info("Fetching product with id: {}", productId);
+
+        try {
+
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() ->
+                            new RuntimeException("Product not found with id: " + productId));
+
+            ProductResponse response =
+                    modelMapper.map(product, ProductResponse.class);
+
+            return BaseApiResponse.<ProductResponse>builder()
+                    .code(200)
+                    .message("Product fetched successfully.")
+                    .data(response)
+                    .build();
+
+        } catch (Exception e) {
+
+            log.error("Error while fetching product: {}", e.getMessage());
+
+            return BaseApiResponse.<ProductResponse>builder()
+                    .code(500)
+                    .message(e.getMessage())
+                    .data(null)
+                    .build();
         }
-
-        productRepository.deleteById(id);
-
-        System.out.println("Product with id " + id + " deleted successfully");
     }
 
     @Override
-    public List<ProductResponseDto> getAvailableProducts() {
-        List<Product> productList = productRepository.findProductByIsAvailableTrue();
-        return productList.stream().map((product) -> modelMapper.map(product, ProductResponseDto.class)).toList();
+    public BaseApiResponse<ProductResponse> updateProductById(Long productId,
+                                                              ProductRequest productRequest) {
 
+        log.info("Updating product with id: {}", productId);
+
+        try {
+
+            if (productRequest.getFilledStockQuantity() > productRequest.getStockQuantity()) {
+                throw new IllegalArgumentException("Filled stock quantity cannot exceed stock quantity.");
+            }
+
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() ->
+                            new RuntimeException("Product not found with id: " + productId));
+
+            Category category = categoryRepository.findById(productRequest.getCategoryId())
+                    .orElseThrow(() ->
+                            new RuntimeException("Category not found with id: "
+                                    + productRequest.getCategoryId()));
+
+            product.setName(productRequest.getName());
+            product.setPrice(productRequest.getPrice());
+            product.setDescription(productRequest.getDescription());
+            product.setStockQuantity(productRequest.getStockQuantity());
+            product.setCategory(category);
+
+            int remainingQuantity = productRequest.getStockQuantity()
+                    - productRequest.getFilledStockQuantity();
+
+            product.setRemainingQuantity(remainingQuantity);
+            product.setAvailable(remainingQuantity > 0);
+
+            Product updatedProduct = productRepository.save(product);
+
+            ProductResponse response =
+                    modelMapper.map(updatedProduct, ProductResponse.class);
+
+            return BaseApiResponse.<ProductResponse>builder()
+                    .code(200)
+                    .message("Product updated successfully.")
+                    .data(response)
+                    .build();
+
+        } catch (Exception e) {
+
+            log.error("Error while updating product: {}", e.getMessage());
+
+            return BaseApiResponse.<ProductResponse>builder()
+                    .code(500)
+                    .message(e.getMessage())
+                    .data(null)
+                    .build();
+        }
+    }
+
+    @Override
+    public BaseApiResponse<String> deleteProductById(Long productId) {
+
+        log.info("Deleting product with id: {}", productId);
+
+        try {
+
+            if (!productRepository.existsById(productId)) {
+                throw new RuntimeException("Product not found with id: " + productId);
+            }
+
+            productRepository.deleteById(productId);
+
+            return BaseApiResponse.<String>builder()
+                    .code(200)
+                    .message("Product deleted successfully.")
+                    .data("Deleted")
+                    .build();
+
+        } catch (Exception e) {
+
+            log.error("Error while deleting product: {}", e.getMessage());
+
+            return BaseApiResponse.<String>builder()
+                    .code(500)
+                    .message(e.getMessage())
+                    .data(null)
+                    .build();
+        }
+    }
+
+    @Override
+    public BaseApiResponse<List<ProductResponse>> getAvailableProducts() {
+
+        log.info("Fetching available products.");
+
+        try {
+
+            List<ProductResponse> response = productRepository.findProductByIsAvailableTrue()
+                    .stream()
+                    .map(product -> modelMapper.map(product, ProductResponse.class))
+                    .toList();
+
+            return BaseApiResponse.<List<ProductResponse>>builder()
+                    .code(200)
+                    .message("Available products fetched successfully.")
+                    .data(response)
+                    .build();
+
+        } catch (Exception e) {
+
+            log.error("Error while fetching available products: {}", e.getMessage());
+
+            return BaseApiResponse.<List<ProductResponse>>builder()
+                    .code(500)
+                    .message(e.getMessage())
+                    .data(null)
+                    .build();
+        }
     }
 }

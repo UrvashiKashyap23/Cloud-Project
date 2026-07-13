@@ -1,4 +1,4 @@
-package com.example.E_Commerce.DTO;
+package com.example.E_Commerce.Request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductRequestDto {
+public class ProductRequest {
 
     @NotBlank       //@NotNull for int and @NotBlank for String
     private String name;

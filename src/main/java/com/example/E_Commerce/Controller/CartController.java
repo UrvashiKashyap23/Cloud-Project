@@ -1,9 +1,12 @@
 package com.example.E_Commerce.Controller;
 
-import com.example.E_Commerce.DTO.CartDto;
-import com.example.E_Commerce.DTO.CartItemRequestDto;
+import com.example.E_Commerce.Response.BaseApiResponse;
+import com.example.E_Commerce.Response.CartResponse;
+import com.example.E_Commerce.Request.CartItemRequest;
 import com.example.E_Commerce.Service.CartService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,33 +16,34 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/create")
-    public CartDto createCart(){
-        return cartService.createCart();
+    @GetMapping("/get")
+    public ResponseEntity<BaseApiResponse<CartResponse>> getCart() {
+        return ResponseEntity.ok(cartService.getCart());
     }
 
-    @GetMapping("/get/{cartId}")
-    public CartDto getCartById(@PathVariable Long cartId){
-        return cartService.getCartById(cartId);
+    @DeleteMapping("/clear")
+    public ResponseEntity<BaseApiResponse<String>> clearCart() {
+        return ResponseEntity.ok(cartService.clearCart());
     }
 
-    @DeleteMapping("/clear/{id}")
-    public String clearCart(@PathVariable Long id){
-        return cartService.clearCart(id);
+    @PostMapping("/addproduct")
+    public ResponseEntity<BaseApiResponse<CartResponse>> addProductToCart(@Valid @RequestBody CartItemRequest cartItemRequest) {
 
+        return ResponseEntity.ok(
+                cartService.addProductToCart(cartItemRequest));
     }
-    @PostMapping("/addproduct/{userId}")
-    public CartDto addProductToCart(@PathVariable Long userId,@RequestBody  CartItemRequestDto cartItemRequestDto){
 
-        return cartService.addProductToCart(userId,cartItemRequestDto);
-    }
-    @DeleteMapping("/deleteCartItem/{cartId}/{cartItemId}")
-    public CartDto deleteProductFromCart(@PathVariable Long cartId , @PathVariable Long cartItemId){
-        return cartService.removeProductFromCart(cartId, cartItemId);
-    }
-    @PutMapping("/{cartId}/{cartItemId}/{quantity}")
-    public CartDto updateCartItemQuantity(@PathVariable Long cartId, @PathVariable Long cartItemId, @PathVariable int quantity) {
+    @DeleteMapping("/deleteCartItem/{cartItemId}")
+    public ResponseEntity<BaseApiResponse<CartResponse>> deleteProductFromCart(@PathVariable Long cartItemId) {
 
-        return cartService.updateCartItemQuantity(cartId, cartItemId, quantity);
+        return ResponseEntity.ok(
+                cartService.removeProductFromCart(cartItemId));
+    }
+
+    @PutMapping("/{cartItemId}/{quantity}")
+    public ResponseEntity<BaseApiResponse<CartResponse>> updateCartItemQuantity(@PathVariable Long cartItemId, @PathVariable int quantity) {
+
+        return ResponseEntity.ok(
+                cartService.updateCartItemQuantity(cartItemId, quantity));
     }
 }

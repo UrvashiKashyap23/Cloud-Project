@@ -25,7 +25,7 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String name;
+    private String fullName;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -49,6 +49,12 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PaymentMethod> paymentMethods;
 
     @PrePersist
     public void onCreate() {

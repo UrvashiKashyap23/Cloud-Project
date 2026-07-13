@@ -1,9 +1,9 @@
-package com.example.E_Commerce.DTO;
+package com.example.E_Commerce.Request;
 
 import lombok.Data;
 
 @Data
-public class SignupRequestDto {
+public class SignupRequest {
     private String username;
 
     private String password;

@@ -1,5 +1,6 @@
-package com.example.E_Commerce.DTO;
+package com.example.E_Commerce.Request;
 
+import com.example.E_Commerce.DTO.OrderItemRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderRequestDto {
+public class OrderRequest {
 
     private List<OrderItemRequestDto> items;
 }

@@ -1,5 +1,6 @@
 package com.example.E_Commerce.Entity;
 
+import com.example.E_Commerce.DTO.Enums.CancelReason;
 import com.example.E_Commerce.DTO.Enums.StatusType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,17 @@ public class Order {
     private LocalDateTime createdAt;
 
     private  LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    private CancelReason cancelReason;
+
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private Address deliveryAddress;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+    private PaymentMethod paymentMethod;
 
     @PrePersist
     public void prePersist() {

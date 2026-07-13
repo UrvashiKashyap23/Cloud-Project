@@ -1,9 +1,12 @@
 package com.example.E_Commerce.Controller;
 
-import com.example.E_Commerce.DTO.ProductRequestDto;
-import com.example.E_Commerce.DTO.ProductResponseDto;
+import com.example.E_Commerce.Request.ProductRequest;
+import com.example.E_Commerce.Response.BaseApiResponse;
+import com.example.E_Commerce.Response.ProductResponse;
 import com.example.E_Commerce.Service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,33 +19,38 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/create")
-    public ProductResponseDto createProduct(@RequestBody ProductRequestDto productDto){
-        return productService.createProduct(productDto);
+    public ResponseEntity<BaseApiResponse<ProductResponse>> createProduct(@Valid @RequestBody ProductRequest productRequest) {
 
+        return ResponseEntity.ok(productService.createProduct(productRequest));
     }
 
     @GetMapping("/getAll")
-    public List<ProductResponseDto> getAllProducts(){
-        return productService.getAllProducts();
+    public ResponseEntity<BaseApiResponse<List<ProductResponse>>> getAllProducts() {
+
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    @GetMapping("/get/{id}")
-    public ProductResponseDto getProductById(@PathVariable Long id){
-        return productService.getProductById(id);
+    @GetMapping("/get/{productId}")
+    public ResponseEntity<BaseApiResponse<ProductResponse>> getProductById(@PathVariable Long productId) {
+
+        return ResponseEntity.ok(productService.getProductById(productId));
     }
 
     @GetMapping("/get/available")
-    public List<ProductResponseDto> getAvailableProducts(){
-        return productService.getAvailableProducts();
+    public ResponseEntity<BaseApiResponse<List<ProductResponse>>> getAvailableProducts() {
+
+        return ResponseEntity.ok(productService.getAvailableProducts());
     }
 
-    @PutMapping("/put/{id}")
-    public ProductResponseDto updateProductById(@PathVariable Long id, @RequestBody ProductRequestDto productDto){
-        return productService.updateProductById(id,productDto);
+    @PutMapping("/put/{productId}")
+    public ResponseEntity<BaseApiResponse<ProductResponse>> updateProductById(@PathVariable Long productId, @Valid @RequestBody ProductRequest productRequest) {
+
+        return ResponseEntity.ok(productService.updateProductById(productId, productRequest));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteProductById(@PathVariable Long id,@RequestBody ProductRequestDto productRequestDto){
-        productService.deleteProductById(id);
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<BaseApiResponse<String>> deleteProductById(@PathVariable Long productId) {
+
+        return ResponseEntity.ok(productService.deleteProductById(productId));
     }
 }

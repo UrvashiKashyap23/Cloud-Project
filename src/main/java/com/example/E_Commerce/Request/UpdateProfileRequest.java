@@ -1,12 +1,11 @@
-package com.example.E_Commerce.DTO;
+package com.example.E_Commerce.Request;
 
 import lombok.Data;
 
 @Data
-public class UpdateProfileRequestDto {
+public class UpdateProfileRequest {
 
     private String name;
 
     private String username;
-
 }
