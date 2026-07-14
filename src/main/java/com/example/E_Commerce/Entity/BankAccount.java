@@ -4,20 +4,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "payment_methods")
+@Table(name = "Bank-Accounts")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaymentMethod {
+public class BankAccount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long paymentId;
+    private Long accountId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
@@ -26,12 +26,12 @@ public class PaymentMethod {
     @Column(nullable = false)
     private String bankName;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String accountNumber;
 
     @Column(nullable = false)
     private String ifscCode;
 
     @Column(nullable = false)
-    private boolean primaryPaymentMethod;
+    private boolean primaryAccount;
 }

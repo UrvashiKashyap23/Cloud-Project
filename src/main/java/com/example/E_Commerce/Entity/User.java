@@ -54,7 +54,7 @@ public class User {
     private List<Address> addresses;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PaymentMethod> paymentMethods;
+    private List<BankAccount> bankAccounts;
 
     @PrePersist
     public void onCreate() {

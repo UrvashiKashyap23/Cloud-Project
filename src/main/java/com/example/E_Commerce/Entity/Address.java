@@ -21,12 +21,6 @@ public class Address {
     private User user;
 
     @Column(nullable = false)
-    private String fullName;
-
-    @Column(nullable = false)
-    private String phoneNumber;
-
-    @Column(nullable = false)
     private String houseNo;
 
     @Column(nullable = false)

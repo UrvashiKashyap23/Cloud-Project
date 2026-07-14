@@ -45,7 +45,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "payment_id")
-    private PaymentMethod paymentMethod;
+    private BankAccount bankAccount;
 
     @PrePersist
     public void prePersist() {

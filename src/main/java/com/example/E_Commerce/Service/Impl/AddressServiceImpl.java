@@ -7,6 +7,7 @@ import com.example.E_Commerce.Repository.UserRepository;
 import com.example.E_Commerce.Request.AddressRequest;
 import com.example.E_Commerce.Response.AddressResponse;
 import com.example.E_Commerce.Response.BaseApiResponse;
+import com.example.E_Commerce.Response.UserAddressResponse;
 import com.example.E_Commerce.Service.AddressService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +40,6 @@ public class AddressServiceImpl implements AddressService {
 
         return AddressResponse.builder()
                 .addressId(address.getAddressId())
-                .fullName(address.getFullName())
-                .phoneNumber(address.getPhoneNumber())
                 .houseNo(address.getHouseNo())
                 .area(address.getArea())
                 .city(address.getCity())
@@ -74,8 +73,6 @@ public class AddressServiceImpl implements AddressService {
 
             Address address = Address.builder()
                     .user(user)
-                    .fullName(request.getFullName())
-                    .phoneNumber(request.getPhoneNumber())
                     .houseNo(request.getHouseNo())
                     .area(request.getArea())
                     .city(request.getCity())
@@ -110,7 +107,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public BaseApiResponse<List<AddressResponse>> getAllAddresses() {
+    public BaseApiResponse<UserAddressResponse> getAllAddresses() {
 
         log.info("Fetching all addresses of authenticated user.");
 
@@ -124,17 +121,22 @@ public class AddressServiceImpl implements AddressService {
                     .map(this::mapToResponse)
                     .toList();
 
-            return BaseApiResponse.<List<AddressResponse>>builder()
+            UserAddressResponse response = new UserAddressResponse();
+            response.setName(user.getFullName());
+            response.setPhoneNumber(user.getPhoneNumber());
+            response.setAddresses(addressResponses);
+
+            return BaseApiResponse.<UserAddressResponse>builder()
                     .code(HttpStatus.OK.value())
                     .message("Addresses fetched successfully.")
-                    .data(addressResponses)
+                    .data(response)
                     .build();
 
         } catch (Exception e) {
 
             log.error("Error fetching addresses: {}", e.getMessage());
 
-            return BaseApiResponse.<List<AddressResponse>>builder()
+            return BaseApiResponse.<UserAddressResponse>builder()
                     .code(HttpStatus.BAD_REQUEST.value())
                     .message("Failed to fetch addresses: " + e.getMessage())
                     .data(null)
@@ -196,8 +198,6 @@ public class AddressServiceImpl implements AddressService {
                 throw new RuntimeException("Unauthorized access.");
             }
 
-            address.setFullName(request.getFullName());
-            address.setPhoneNumber(request.getPhoneNumber());
             address.setHouseNo(request.getHouseNo());
             address.setArea(request.getArea());
             address.setCity(request.getCity());

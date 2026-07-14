@@ -11,12 +11,6 @@ import lombok.*;
 public class AddressRequest {
 
     @NotBlank
-    private String fullName;
-
-    @NotBlank
-    private String phoneNumber;
-
-    @NotBlank
     private String houseNo;
 
     @NotBlank

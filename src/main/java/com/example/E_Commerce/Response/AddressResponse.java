@@ -11,10 +11,6 @@ public class AddressResponse {
 
     private Long addressId;
 
-    private String fullName;
-
-    private String phoneNumber;
-
     private String houseNo;
 
     private String area;

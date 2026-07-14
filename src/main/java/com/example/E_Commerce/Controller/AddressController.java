@@ -3,6 +3,7 @@ package com.example.E_Commerce.Controller;
 import com.example.E_Commerce.Request.AddressRequest;
 import com.example.E_Commerce.Response.AddressResponse;
 import com.example.E_Commerce.Response.BaseApiResponse;
+import com.example.E_Commerce.Response.UserAddressResponse;
 import com.example.E_Commerce.Service.AddressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class AddressController {
     }
 
     @GetMapping
-    public ResponseEntity<BaseApiResponse<List<AddressResponse>>> getAllAddresses() {
+    public ResponseEntity<BaseApiResponse<UserAddressResponse>>getAllAddresses() {
 
         return ResponseEntity.ok(addressService.getAllAddresses());
     }

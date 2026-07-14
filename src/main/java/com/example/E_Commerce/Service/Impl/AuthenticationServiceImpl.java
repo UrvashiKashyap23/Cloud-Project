@@ -42,6 +42,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new RuntimeException("Username already exists.");
             }
 
+            if (userRepository.existsByEmail(signupRequest.getEmail())) {
+                throw new RuntimeException("Email already exists.");
+            }
+
+            if (userRepository.existsByPhoneNumber(signupRequest.getPhoneNumber())) {
+                throw new RuntimeException("Phone number already exists.");
+            }
+
             User user = modelMapper.map(signupRequest, User.class);
 
             user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
